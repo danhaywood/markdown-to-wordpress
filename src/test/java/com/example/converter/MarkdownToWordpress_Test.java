@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.approvaltests.Approvals;
 import org.approvaltests.reporters.Junit5Reporter;
 import org.approvaltests.reporters.UseReporter;
+import org.approvaltests.scrubbers.NormalizeSpacesScrubber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -17,10 +18,13 @@ class MarkdownToWordpress_Test extends AbstractTest {
     @RequiredArgsConstructor
     @Getter
     enum Scenario {
-        para("para.md"),
+        para,
+        para2,
+        h1,
+        h2,
+//        list,
+//        code_bash,
         ;
-
-        final String input;
     }
 
     MarkdownToWordpress converter;
@@ -34,13 +38,18 @@ class MarkdownToWordpress_Test extends AbstractTest {
     @EnumSource(Scenario.class)
     void each(Scenario scenario) throws Exception {
 
+        // given
         final var markdown = readMd(scenario, "_input");
 
+        // when
         final var output = converter.convert(markdown);
 
-        // TODO: this will need refinement to scrub out the unique identifiers of the approved responses vs expected.
-        Approvals.verifyHtml(output, Approvals.NAMES.withParameters(scenario.name()));
+        // then
+        Approvals.verifyHtml(output, Approvals.NAMES.withParameters(scenario.name())
+                .withScrubber(new NormalizeSpacesScrubber())
+                .withScrubber(new TimestampScrubber()));
 
     }
+
 }
 

@@ -3,16 +3,17 @@ package com.example.converter;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 
@@ -46,17 +47,55 @@ public class MarkdownToWordpress implements Callable<Integer> {
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
-        Node document = parser.parse(markdown);
-        String htmlBody = renderer.render(document);
+        final var buf = new StringBuilder();
+        final var node = parser.parse(markdown);
 
-        String wordpressHtml = wrapWithWordPressBlocks(htmlBody);
-        return wordpressHtml;
+        node.getChildren()
+                .forEach(child -> {
+            final var markdownHtml = renderer.render(child).trim();
+            for (Converter converter : converters) {
+                final var convertedHtml = converter.convert(markdownHtml);
+                if (convertedHtml != null) {
+                    buf.append(convertedHtml);
+                    break;
+                }
+            }
+        });
+        return buf.toString();
     }
 
-    private String wrapWithWordPressBlocks(String htmlBody) {
-        String trimmed = htmlBody.trim();
-        return "<!-- wp:paragraph {\"canvasClassName\":\"cnvs-block-core-paragraph-1754216031731\"} -->\n"
-             + trimmed + "\n"
-             + "<!-- /wp:paragraph -->\n";
+    interface Converter {
+        String convert(String html);
+    }
+
+    final List<Converter> converters = new ArrayList<>() {{
+        add(html -> {
+            if (html.startsWith("<p>") && html.endsWith("</p>")) {
+                return
+                    """
+                    <!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-%s"} -->
+                    %s
+                    <!-- /wp:paragraph -->
+                    """.formatted(timestamp(), html);
+            }
+            return null;
+        });
+        add(html -> {
+            if (html.startsWith("<h2>") && html.endsWith("</h2>")) {
+                return
+                        """
+                        <!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-%s"} -->
+                        %s
+                        <!-- /wp:heading -->
+                        """.formatted(timestamp(), html)
+                                .replaceAll("<h2>", "<h2 class=\"wp-block-heading\">");
+            }
+            return null;
+        });
+    }};
+
+
+    private static @NotNull String timestamp() {
+        return String.valueOf(java.time.Instant.now().toEpochMilli());
     }
 }
