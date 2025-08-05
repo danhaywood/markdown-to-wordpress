@@ -1,0 +1,346 @@
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216031731"} -->
+<p>Let's set the scene: you're about to start work on a line-of-business application within your enterprise. It has to handle a complicated domain, and the business expect it to deliver value for them for many years to come. How would you go about building it?</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-1754216336579"} -->
+<h2 class="wp-block-heading">Choosing the UI</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216365521"} -->
+<p>One of the earlier decisions you'll need to make when building your app is the technology for the UI.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216365523"} -->
+<p>If you're an afficionado of front-end frameworks, you'd quite possibly reach for something like React, Angular or Vue), with corresponding controllers for the backend. Or if you prefer Java over Javascript, and prefer your UI to be defined at the server, you might use Vaadin, PrimeFaces or even Apache Wicket. Or you might prefer to be retro and look to HTMX, following the HATEOAS.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216365526"} -->
+<p>To speed you up, you might choose code generate your app, for example using JHipster. Or you might well indulge in a bit of vibe coding and have an AI agent do your code generation for you; though you might end up with a bunch of code you don't necessarily understand.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3,"canvasClassName":"cnvs-block-core-heading-1754216399207"} -->
+<h3 class="wp-block-heading">Costs and Risks</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216411444"} -->
+<p>However you go about it, building the user interface typically consumes a substantial slice of the development budget; some estimates put the figure as high as 40%. But there's a much more subtle cost to building a UI in this way, which is this: without care, that custom-written presentation layer can act as a kind of distortion force field, obscuring and obfuscating the underlying domain concepts of your application.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216445848"} -->
+<p>If you have a frontend UI team separate from the backend teams, then the risk is even higher, because of the intrinsic difficulty of explaining subtle concepts and ideas to another team who have their own priorities. But it can happen even if there's just one team with responsibility for both domain and UI; there's always the risk that the two drift apart.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-1754216439645"} -->
+<h2 class="wp-block-heading">Tackling the essential complexity of your domain</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216474872"} -->
+<p>Developing the ubiquitous language of your domain requires you to work closely with the domain experts/expert users. You might be able to use a technique such as BDD to drive out the domain concepts, but this won't work in every context; what if your domain experts aren't native speakers in your own language?</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216474874"} -->
+<p>You'd be better off therefore developing the domain by showing them working software, but since all they actually see is the UI, you will - as noted above - have to work hard to make sure that the changes you make in the UI are properly reflected down into your domain classes proper.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3,"canvasClassName":"cnvs-block-core-heading-1754216485801"} -->
+<h3 class="wp-block-heading">Naked what now?</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216545755"} -->
+<p>Apache Causeway solves both the "how do we build our UI?" issue as well as the "how do we develop a good domain model?" question, and it does this by generating the UI for you. But this isn't a compile-time generation tool (such as JHipster); instead, the UI is generated at run-time, as a projection of the underlying domain model.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216545758"} -->
+<p>It's somewhat analogous to how an ORM such as Hibernate works; Hibernate builds a metamodel at runtime and uses that to submit SQL on the fly. Causeway does the same (it builds up a metamodel also); but it uses that metamodel to render the UI (or API). As such, it's an implementation of the "naked objects" architecture; hopefully you can see where this (deliberately provoking) name comes from.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251422908"} -->
+<p>By the way, a human-usable UI is only one such projection of the metamodel. Causeway can also use it to dynamically generate a REST API for your app (along with Swagger files), as well as a complete GraphQL API.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:group {"className":"is-style-cnvs-block-bg-light","layout":{"type":"constrained"},"canvasClassName":"cnvs-block-core-group-1754216679577","borderStyle":"dashed","borderWidthTop":1,"borderWidthBottom":1,"borderWidthLeft":1,"borderWidthRight":1,"borderRadiusTopRight":0} -->
+<div class="wp-block-group is-style-cnvs-block-bg-light cnvs-block-core-group-1754216679577"><!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754216547321"} -->
+    <p>By the way, a human-usable UI is only one such projection of the metamodel. Causeway can also use it to dynamically generate a REST API for your app (along with Swagger files), as well as a complete GraphQL API.</p>
+    <!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-1754236176332"} -->
+<h2 class="wp-block-heading">In the real-world</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236171147"} -->
+<p>You might be sceptical that such an approach can be used to build anything other than toy/CRUD-style applications, I can understand that. By way of counterexamples, I can tell you that the naked obejcts pattern powers the main benefit administration system for Irish Central Government, used by 7,000 officers across the country, who administer over 40 benefits (pension, child benefit etc) as well as numerous related schemes and the main identity database for the citizens of Ireland. The app has nearly 3000 domain objects, and is 20 years old and still going strong.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236233454"} -->
+<p>For another example, Apache Causeway has been used to develop 'Estatio', an in-house ERP system for Eurocommercial Properties, who own and operate 25 shopping centres across Europe. Estatio isn't quite as old as the Irish system, 12 years in fact, but it's in rude health. It consists of about 300 domain concepts, is used by a about 200+ users, and processes about €500m invoices each year (though it's more than just an invoicing system). Oh, and here's the best part: it's developed and supported by a team of just 3 developers (actually, not even; only one of us is full-time).</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-1754236320841"} -->
+<h2 class="wp-block-heading">Show me the money</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236328844"} -->
+<p>Enough scene-setting; in the rest of this article we'll take a good look at what an Apache Causeway application looks like. To do that, we'll start with Causeway's version of the famous petclinic app. Causeway provides this as a <a href="https://causeway.apache.org/tutorials/latest/petclinic/about.html">tutorial app</a> for you to learn by doing; we're going to start with (more or less) the final version of this app and have a poke around at some of its implemented features.  For simplicity, I've taken a copy of the app and pushed it to a new repo on github.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236558683"} -->
+<p>First, make sure you have prerequisites:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list {"canvasClassName":"cnvs-block-core-list-1754236573221"} -->
+<ul><!-- wp:list-item {"canvasClassName":"cnvs-block-core-list-item-1754236573196"} -->
+    <li>Java 21</li>
+    <!-- /wp:list-item -->
+
+    <!-- wp:list-item {"canvasClassName":"cnvs-block-core-list-item-1754236573202"} -->
+    <li>Apache Maven 3.9.9+ and/or mvndaemon (`mvnd`).</li>
+    <!-- /wp:list-item -->
+
+    <!-- wp:list-item {"canvasClassName":"cnvs-block-core-list-item-1754236573207"} -->
+    <li>git</li>
+    <!-- /wp:list-item -->
+
+    <!-- wp:list-item {"canvasClassName":"cnvs-block-core-list-item-1754236573211"} -->
+    <li>a Java IDE (IntelliJ, Eclipse, VSCode etc)</li>
+    <!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236607103"} -->
+<p>Create an empty directory, and in it clone and then build the app:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code {"language":"bash"} -->
+<pre class="wp-block-syntaxhighlighter-code">git clone https://github.com/danhaywood/petclinic-javapro .
+mvn clean install -T1C                  # or mvnd clean install</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236636925"} -->
+<p>Wait for the internet to be downloaded, and then open up the app in your IDE.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3,"canvasClassName":"cnvs-block-core-heading-1754236831297"} -->
+<h3 class="wp-block-heading">Running the App</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236801123"} -->
+<p>Let's start by running the app. Locate the <code>PetClinicApp</code>, you'll notice that this is a Spring Boot application, because Causeway as a framew</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236927658"} -->
+<p>Or, if you want to run from the command line, use:ork sits on top of Spring Boot. It contains a <code>main()</code> method, so you can start it immediately.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754236940455"} -->
+<p>Or, if you want to run from the command line, use:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code -->
+<pre class="wp-block-syntaxhighlighter-code">mvn spring-boot:run -pl webapp</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754237007741"} -->
+<p>If you open up <a href="http://localhost:8080/">http://localhost:8080</a>, you'll see:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":5814,"width":"400px","sizeSlug":"large","linkDestination":"none","canvasClassName":"cnvs-block-core-image-1754249962509"} -->
+<figure class="wp-block-image size-large is-resized"><img src="https://javapro.io/wp-content/uploads/2025/08/causeway-welcome-page-1024x564.png" alt="" class="wp-image-5814" style="width:400px" /></figure>
+<!-- /wp:image -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754237104567"} -->
+<p>Click on the "Generic UI (Wicket)", which will take you to <a href="http://localhost:8080/wicket:">http://localhost:8080/wicket:</a></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754237011158"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":5813,"width":"400px","sizeSlug":"large","linkDestination":"none","canvasClassName":"cnvs-block-core-image-1754250128970"} -->
+<figure class="wp-block-image size-large is-resized"><img src="https://javapro.io/wp-content/uploads/2025/08/causeway-logon-page-1024x896.png" alt="" class="wp-image-5813" style="width:400px" /></figure>
+<!-- /wp:image -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754237011531"} -->
+<p>Use 'sven/pass' as the username/password (details were on the splash screen). You should end up at the home page:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250223948"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":5805,"sizeSlug":"large","linkDestination":"none","canvasClassName":"cnvs-block-core-image-1754250227797"} -->
+<figure class="wp-block-image size-large"><img src="https://javapro.io/wp-content/uploads/2025/08/petclinic-home-page-1024x419.png" alt="" class="wp-image-5805" /></figure>
+<!-- /wp:image -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754237011902"} -->
+<p>Click on the icon for "Jamal", and you'll be viewing the page for this pet owner:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754237011936"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":5812,"sizeSlug":"large","linkDestination":"none","canvasClassName":"cnvs-block-core-image-1754250255808"} -->
+<figure class="wp-block-image size-large"><img src="https://javapro.io/wp-content/uploads/2025/08/petowner-object-1024x571.png" alt="" class="wp-image-5812" /></figure>
+<!-- /wp:image -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250296416"} -->
+<p>You've already encountered your first two domain objects: the <code>HomePageViewModel</code> (a view model object), and <code>PetOwner</code> (an entity). Both of the pages you visited were rendered dynamically and directly from the underlying domain object; there is no custom or generated controllers, templates or Javascript involved. So, let's now tie what you've seen back to the code.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3,"canvasClassName":"cnvs-block-core-heading-1754250322917"} -->
+<h3 class="wp-block-heading">Domain Objects: exploring the <code>PetOwner</code> class</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250298130"} -->
+<p>Locate the <code>PetOwner.java</code> class in your IDE, and navigate to its definition:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250298319"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code {"language":"java"} -->
+<pre class="wp-block-syntaxhighlighter-code">@Entity
+@Table(schema= PetOwnerModule.SCHEMA,
+    uniqueConstraints = {@UniqueConstraint(name = "PetOwner__name__UNQ", columnNames = {"name"})})
+@EntityListeners(CausewayEntityListener.class)
+@Named(PetOwnerModule.NAMESPACE + ".PetOwner")
+@DomainObject
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
+@ToString(onlyExplicitlyIncluded = true)
+public class PetOwner implements Comparable&lt;PetOwner&gt; {
+    ...
+}</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250338782"} -->
+<p>Many of these annotations are for JPA, but its the <code>@DomainObject</code> annotation that's significant here, identifying this as an object to be included in Causeway's metamodel.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250338940"} -->
+<p>Let's now take a closer look at the members of this class.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":4,"canvasClassName":"cnvs-block-core-heading-1754250937475"} -->
+<h4 class="wp-block-heading">Properties</h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250922883"} -->
+<p>Using your IDE, search for the getters of <code>PetOwner</code> class:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250923042"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":5811,"width":"400px","sizeSlug":"full","linkDestination":"none","canvasClassName":"cnvs-block-core-image-1754251082287"} -->
+<figure class="wp-block-image size-full is-resized"><img src="https://javapro.io/wp-content/uploads/2025/08/PetOwner-getters.png" alt="" class="wp-image-5811" style="width:400px" /></figure>
+<!-- /wp:image -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251113602"} -->
+<p>These instance fields are all rendered automatically in the UI. Most of the fields scalars, returning strings, numbers, dates etc; most are rendered as text boxes of various hues, although&nbsp;<code>content</code>&nbsp;renders a PDF. We call these properties.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251113604"} -->
+<p>For example, here's the&nbsp;<code>knownAs</code>&nbsp;property:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250339281"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code {"language":"java"} -->
+<pre class="wp-block-syntaxhighlighter-code">@Property(editing = Editing.ENABLED)
+@Column(length = 40, nullable = true, name = "knownAs")
+@Getter @Setter
+private String knownAs;</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250339457"} -->
+<p>The <code>@Property</code> annotation is a Causeway annotation; you can see that it allows editing, so this value can be modified directly. Try it in the application.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3,"canvasClassName":"cnvs-block-core-heading-1754251146818"} -->
+<h3 class="wp-block-heading">Collections</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754250339818"} -->
+<p>The <code>pets</code> field on the other hand returns a collection type (<code>Set&lt;Pet&gt;</code>), and so it is rendered as a table; we call these collections:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251161362"} -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code {"language":"java"} -->
+<pre class="wp-block-syntaxhighlighter-code">@Collection
+@OneToMany(mappedBy = "petOwner", cascade = CascadeType.ALL, orphanRemoval = true)
+@Getter
+private Set&lt;Pet&gt; pets = new TreeSet&lt;&gt;();</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:group {"layout":{"type":"constrained"},"canvasClassName":"cnvs-block-core-group-1754251664391"} -->
+<div class="wp-block-group"><!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251599867"} -->
+    <p>You might have noticed that in the UI that there is also a "visits" collection that does not appear in the <code>PetOwner</code> entity.  We'll look at this in a later article.</p>
+    <!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-1754251387601"} -->
+<h2 class="wp-block-heading">Actions</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251162214"} -->
+<p>Unlike the <code>knownAs</code> property, if you try to edit the <code>name</code> property you won't be able to; Causeway's default is that properties are read-only. Instead, the application allows the name to be modified using an "action":</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code {"language":"java"} -->
+<pre class="wp-block-syntaxhighlighter-code">@Action(semantics = IDEMPOTENT)
+@ActionLayout(
+        describedAs = "Updates the name of this object, certain characters (" + Name.PROHIBITED_CHARACTERS + ") are not allowed.")
+public PetOwner updateName(
+        @Name final String name) {
+    setName(name);
+    return this;
+}
+@MemberSupport public String default0UpdateName() {
+    return getName();
+}</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251936619"} -->
+<p>There's quite a lot going on here, and we won't explain every feature. But you can see that the&nbsp;<code>updateName(...)</code>&nbsp;method is annotated with Causeway's&nbsp;<code>@Action</code>&nbsp;annotation.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251936622"} -->
+<p>Another example of an action is "Add Pet":</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:syntaxhighlighter/code -->
+<pre class="wp-block-syntaxhighlighter-code">@Action
+@ActionLayout(associateWith = "pets", sequence = "1")
+public PetOwner addPet(@PetName final String name, final PetSpecies species) {
+    pets.add(new Pet(this, name, species));
+    return this;
+}
+@MemberSupport
+public String validate0AddPet(final String name) {
+    if (getPets().stream().anyMatch(x -&gt; Objects.equals(x.getName(), name))) {
+        return "This owner already has a pet called '" + name + "'";
+    }
+    return null;
+}</pre>
+<!-- /wp:syntaxhighlighter/code -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754251936625"} -->
+<p>While neither of these actions do much more than update the state of the entity (they are rather "CRUD-y"), in a larger application they could of course perform much more complicated business logic. Even with these simple actions, though, we can see that Causeway allows validation rules to be easily written.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-1754285025587"} -->
+<p>For example, with the "Add Pet" action, the supporting <code>validate0AddPet</code> method is used to validate the pet name (the 0th param of the <code>addPet</code> method). If this method returns a non-<code>null</code> value, then this is displayed to the user:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":5801,"width":"450px","sizeSlug":"large","linkDestination":"none","canvasClassName":"cnvs-block-core-image-1754284892186"} -->
+<figure class="wp-block-image size-large is-resized"><img src="https://javapro.io/wp-content/uploads/2025/08/add-pet-validate-name-1024x462.png" alt="" class="wp-image-5801" style="width:450px" /></figure>
+<!-- /wp:image -->
+

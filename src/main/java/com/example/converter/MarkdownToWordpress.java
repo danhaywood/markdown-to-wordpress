@@ -5,12 +5,16 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
+
+import org.jspecify.annotations.NonNull;
+
 
 @CommandLine.Command(name = "markdown-to-wordpress", mixinStandardHelpOptions = true, version = "1.0",
         description = "Converts Markdown to WordPress-compatible HTML blocks")
@@ -31,6 +35,13 @@ public class MarkdownToWordpress implements Callable<Integer> {
     public Integer call() throws Exception {
         String markdown = Files.readString(inputFile);
 
+        String wordpressHtml = convert(markdown);
+        Files.writeString(outputFile, wordpressHtml);
+        return 0;
+    }
+
+    @NonNull
+    String convert(String markdown) {
         MutableDataSet options = new MutableDataSet();
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
@@ -39,17 +50,11 @@ public class MarkdownToWordpress implements Callable<Integer> {
         String htmlBody = renderer.render(document);
 
         String wordpressHtml = wrapWithWordPressBlocks(htmlBody);
-        Files.writeString(outputFile, wordpressHtml);
-        return 0;
+        return wordpressHtml;
     }
 
     private String wrapWithWordPressBlocks(String htmlBody) {
-        // Naively wrap paragraphs/headings/lists in WordPress block format
-        return htmlBody
-                .replaceAll("(?s)<p>(.*?)</p>", "<!-- wp:paragraph --><p>$1</p><!-- /wp:paragraph -->")
-                .replaceAll("(?s)<h2>(.*?)</h2>", "<!-- wp:heading --><h2>$1</h2><!-- /wp:heading -->")
-                .replaceAll("(?s)<h3>(.*?)</h3>", "<!-- wp:heading {\"level\":3} --><h3>$1</h3><!-- /wp:heading -->")
-                .replaceAll("(?s)<ul>(.*?)</ul>", "<!-- wp:list --><ul>$1</ul><!-- /wp:list -->")
-                .replaceAll("(?s)<li>(.*?)</li>", "<li>$1</li>");
+        // TODO: enhance or refactor this method to convert HTML to WordPress blocks
+        return htmlBody;
     }
 }
