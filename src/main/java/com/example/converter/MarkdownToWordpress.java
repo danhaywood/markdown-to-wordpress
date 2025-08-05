@@ -54,10 +54,9 @@ public class MarkdownToWordpress implements Callable<Integer> {
     }
 
     private String wrapWithWordPressBlocks(String htmlBody) {
-        // wrap paragraphs in WordPress paragraph blocks with a stable canvasClassName
         String trimmed = htmlBody.trim();
         return "<!-- wp:paragraph {\"canvasClassName\":\"cnvs-block-core-paragraph-1754216031731\"} -->\n"
              + trimmed + "\n"
-             + "<!-- /wp:paragraph -->";
+             + "<!-- /wp:paragraph -->\n";
     }
 }
