@@ -39,9 +39,8 @@ class MarkdownToWordpress_Test extends AbstractTest {
         final var output = converter.convert(markdown);
 
         // TODO: this will need refinement to scrub out the unique identifiers of the approved responses vs expected.
-        Approvals.verifyHtml(markdown, Approvals.NAMES.withParameters(scenario.name()));
+        Approvals.verifyHtml(output, Approvals.NAMES.withParameters(scenario.name()));
 
     }
 }
-
 
