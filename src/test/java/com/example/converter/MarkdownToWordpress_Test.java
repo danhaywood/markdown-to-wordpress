@@ -3,6 +3,7 @@ package com.example.converter;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,12 +14,14 @@ import org.approvaltests.core.Scrubber;
 import org.approvaltests.reporters.Junit5Reporter;
 import org.approvaltests.reporters.UseReporter;
 import org.approvaltests.scrubbers.NormalizeSpacesScrubber;
-import org.junit.jupiter.api.BeforeEach;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 @SpringBootTest(classes = MarkdownToWordpress.class)
 @UseReporter(Junit5Reporter.class)
@@ -27,16 +30,19 @@ class MarkdownToWordpress_Test extends DefaultTest {
     @RequiredArgsConstructor
     @Getter
     enum Scenario {
-//        para,
-//        para2,
-//        h1,
-//        h2,
-//        list,
-//        code_bash,
-//        code_java,
-        figure,
+        para,
+        para2,
+        h1,
+        h2,
+        list,
+        code_bash,
+        code_java,
+//        figure,
         ;
     }
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @Autowired
     MarkdownToWordpress converter;
@@ -46,10 +52,10 @@ class MarkdownToWordpress_Test extends DefaultTest {
     void each(Scenario scenario) throws Exception {
 
         // given
-        final var markdown = readMd(scenario, "_input");
+        final var markdownResource = readMd(scenario, "_input");
 
         // when
-        final var output = converter.convert(markdown);
+        final var output = converter.convert(markdownResource);
 
         // then
         Approvals.verifyHtml(output, Approvals.NAMES.withParameters(scenario.name())
@@ -80,6 +86,34 @@ class MarkdownToWordpress_Test extends DefaultTest {
             }
             return str;
         }
+    }
+
+    protected Resource readMd(@NonNull Enum<?> scenario, @Nullable String prefix) {
+        return readResource(scenario, prefix, ".md");
+    }
+
+    protected Resource readHtml(@NonNull Enum<?> scenario, @Nullable String prefix) {
+        return readResource(scenario, prefix, ".html");
+    }
+
+    @SneakyThrows
+    protected Resource readResource(String suffix) {
+        return readResource(null, null, suffix);
+    }
+
+    @SneakyThrows
+    protected Resource readResource(@Nullable Enum<?> scenario, @Nullable String prefix, String suffix) {
+        String resourceName;
+        if (scenario == null) {
+            resourceName = String.format("%s.%s", getClass().getCanonicalName(), testInfo.getTestMethod().get().getName());
+        } else {
+            resourceName = String.format("%s.%s.%s", getClass().getCanonicalName().replaceAll("[.]", "/"), testInfo.getTestMethod().get().getName(), scenario.name());
+        }
+        if(prefix != null) {
+            resourceName += "." + prefix;
+        }
+        resourceName += suffix;
+        return resourceLoader.getResource(resourceName);
     }
 }
 

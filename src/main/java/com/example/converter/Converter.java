@@ -3,6 +3,7 @@ package com.example.converter;
 import lombok.RequiredArgsConstructor;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.io.Resource;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
@@ -10,10 +11,10 @@ import com.vladsch.flexmark.util.ast.Node;
 interface Converter<T extends Node> {
     boolean supports(Node node);
 
-    default boolean convertNode(HtmlRenderer renderer, Node node, StringBuilder buf) {
-        return convert(renderer, (T)node, buf);
+    default boolean convertNode(Resource resource, HtmlRenderer renderer, Node node, StringBuilder buf) {
+        return convert(resource, renderer, (T)node, buf);
     }
-    boolean convert(HtmlRenderer renderer, T node, StringBuilder buf);
+    boolean convert(Resource resource, HtmlRenderer renderer, T node, StringBuilder buf);
 
     @RequiredArgsConstructor
     class Default<T extends Node> implements Converter<T> {
@@ -26,7 +27,7 @@ interface Converter<T extends Node> {
         }
 
         @Override
-        public boolean convert(HtmlRenderer renderer, T node, StringBuilder buf) {
+        public boolean convert(Resource resource, HtmlRenderer renderer, T node, StringBuilder buf) {
             String render = renderer.render(node);
             final var markdownHtml = sanitize(render);
             final var convertedHtml = doConvert(markdownHtml);

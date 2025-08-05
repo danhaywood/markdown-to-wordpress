@@ -10,6 +10,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import lombok.SneakyThrows;
 import picocli.CommandLine;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +36,7 @@ import org.springframework.stereotype.Component;
 @SpringBootApplication
 public class MarkdownToWordpress implements Runnable {
 
-    private final ResourceLoader resourceLoader;
+    final ResourceLoader resourceLoader;
 
     final List<Converter<?>> converters = new ArrayList<>();
 
@@ -62,13 +63,14 @@ public class MarkdownToWordpress implements Runnable {
     @Override
     public void run() {
         Resource resource = resourceLoader.getResource(inputFile.toString());
-        String markdown = resource.getContentAsString(StandardCharsets.UTF_8);
-        String wordpressHtml = convert(markdown);
+        String wordpressHtml = convert(resource);
         Files.writeString(outputFile, wordpressHtml);
     }
 
     @NonNull
-    String convert(String markdown) {
+    String convert(Resource resource) throws IOException {
+        String markdown = resource.getContentAsString(StandardCharsets.UTF_8);
+
         final var options = new MutableDataSet();
         final var parser = Parser.builder(options).build();
         final var htmlRenderer = HtmlRenderer.builder(options).build();
@@ -76,16 +78,16 @@ public class MarkdownToWordpress implements Runnable {
         final var buf = new StringBuilder();
         final var node = parser.parse(markdown);
 
-        appendConvertedChildren(htmlRenderer, node, buf);
+        appendConvertedChildren(resource, htmlRenderer, node, buf);
         return buf.toString();
     }
 
-    private void appendConvertedChildren(HtmlRenderer renderer, Node node, StringBuilder buf) {
+    private void appendConvertedChildren(Resource resource,  HtmlRenderer renderer, Node node, StringBuilder buf) {
         node.getChildren()
                 .forEach(child -> {
                     converters.stream()
                             .filter(converter -> converter.supports(child))
-                            .filter(converter -> converter.convertNode(renderer, child, buf))
+                            .filter(converter -> converter.convertNode(resource, renderer, child, buf))
                             .findFirst();
         });
     }
@@ -97,12 +99,12 @@ public class MarkdownToWordpress implements Runnable {
         }
 
         @Override
-        public boolean convert(HtmlRenderer renderer, ListBlock node, StringBuilder buf) {
+        public boolean convert(Resource resource, HtmlRenderer renderer, ListBlock node, StringBuilder buf) {
             buf.append("<!-- wp:list {\"canvasClassName\":\"cnvs-block-core-list-" +
                     timestamp() +
                     "\"} -->\n" +
                     "<ul>");
-            appendConvertedChildren(renderer, node, buf);
+            appendConvertedChildren(resource, renderer, node, buf);
             buf.append("</ul>\n" +
                        "<!-- /wp:list -->");
             return true;
