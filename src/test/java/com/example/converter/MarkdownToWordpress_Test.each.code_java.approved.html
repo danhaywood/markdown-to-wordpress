@@ -1,0 +1,15 @@
+<!-- wp:syntaxhighlighter/code {"language":"java"} -->
+<pre class="wp-block-syntaxhighlighter-code">@Entity
+@Table(schema= PetOwnerModule.SCHEMA,
+    uniqueConstraints = {@UniqueConstraint(name = &quot;PetOwner__name__UNQ&quot;, columnNames = {&quot;name&quot;})})
+@EntityListeners(CausewayEntityListener.class)
+@Named(PetOwnerModule.NAMESPACE + &quot;.PetOwner&quot;)
+@DomainObject
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@XmlJavaTypeAdapter(PersistentEntityAdapter.class)
+@ToString(onlyExplicitlyIncluded = true)
+public class PetOwner implements Comparable&lt;PetOwner&gt; {
+    ...
+}
+</pre>
+<!-- /wp:syntaxhighlighter/code -->

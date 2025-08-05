@@ -11,7 +11,7 @@ import org.junit.jupiter.api.TestInfo;
 
 import com.google.common.io.Resources;
 
-public abstract class AbstractTest {
+public abstract class DefaultTest {
 
     protected TestInfo testInfo;
 

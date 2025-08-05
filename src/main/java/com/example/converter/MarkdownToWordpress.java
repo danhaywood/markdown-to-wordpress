@@ -1,30 +1,43 @@
 
 package com.example.converter;
 
-import com.vladsch.flexmark.ast.Heading;
-import com.vladsch.flexmark.ast.Paragraph;
+import com.vladsch.flexmark.ast.*;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 
-import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import picocli.CommandLine;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Callable;
 
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
 
 
-@CommandLine.Command(name = "markdown-to-wordpress", mixinStandardHelpOptions = true, version = "1.0",
-        description = "Converts Markdown to WordPress-compatible HTML blocks")
-public class MarkdownToWordpress implements Callable<Integer> {
+@Component
+@CommandLine.Command(
+        name = "markdown-to-wordpress",
+        mixinStandardHelpOptions = true,
+        version = "1.0",
+        description = "Converts Markdown to WordPress-compatible HTML blocks"
+)
+@SpringBootApplication
+public class MarkdownToWordpress implements Runnable {
+
+    private final ResourceLoader resourceLoader;
+
+    final List<Converter<?>> converters = new ArrayList<>();
 
     @CommandLine.Parameters(index = "0", description = "Input markdown file")
     private Path inputFile;
@@ -32,110 +45,72 @@ public class MarkdownToWordpress implements Callable<Integer> {
     @CommandLine.Parameters(index = "1", description = "Output HTML file")
     private Path outputFile;
 
-    public static void main(String[] args) {
-        int exitCode = new CommandLine(new MarkdownToWordpress()).execute(args);
-        System.exit(exitCode);
+    @Autowired
+    public MarkdownToWordpress(final ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+        converters.add(new ConverterFigure(resourceLoader));  // must be before ConverterParagraph.
+        converters.add(new ConverterParagraph());
+        converters.add(new ConverterHeading1());
+        converters.add(new ConverterHeading2());
+        converters.add(new ListBlockConverter());
+        converters.add(new Converter.Default<>(ListItem.class, "list-item"));
+        converters.add(new ConverterFencedCodeBlock("bash"));
+        converters.add(new ConverterFencedCodeBlock("java"));
     }
 
+    @SneakyThrows
     @Override
-    public Integer call() throws Exception {
-        String markdown = Files.readString(inputFile);
-
+    public void run() {
+        Resource resource = resourceLoader.getResource(inputFile.toString());
+        String markdown = resource.getContentAsString(StandardCharsets.UTF_8);
         String wordpressHtml = convert(markdown);
         Files.writeString(outputFile, wordpressHtml);
-        return 0;
     }
 
     @NonNull
     String convert(String markdown) {
-        MutableDataSet options = new MutableDataSet();
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+        final var options = new MutableDataSet();
+        final var parser = Parser.builder(options).build();
+        final var htmlRenderer = HtmlRenderer.builder(options).build();
 
         final var buf = new StringBuilder();
         final var node = parser.parse(markdown);
 
+        appendConvertedChildren(htmlRenderer, node, buf);
+        return buf.toString();
+    }
+
+    private void appendConvertedChildren(HtmlRenderer renderer, Node node, StringBuilder buf) {
         node.getChildren()
                 .forEach(child -> {
                     converters.stream()
                             .filter(converter -> converter.supports(child))
-                            .map(converter -> converter.convert(renderer, child)).filter(Objects::nonNull)
-                            .findFirst()
-                            .ifPresent(buf::append);
+                            .filter(converter -> converter.convertNode(renderer, child, buf))
+                            .findFirst();
         });
-        return buf.toString();
     }
 
-    interface Converter {
-        boolean supports(Node node);
-        String convert(HtmlRenderer renderer, Node node);
-    }
-    @RequiredArgsConstructor
-    abstract static class AbstractConverter implements Converter {
-        final Class<? extends Node> nodeClass;
 
-        @Override
-        public boolean supports(Node node) {
-            return nodeClass.isAssignableFrom(node.getClass());
-        }
-        @Override
-        public String convert(HtmlRenderer renderer, Node node) {
-            final var markdownHtml = renderer.render(node).trim();
-            return doConvert(markdownHtml);
+    private class ListBlockConverter extends Converter.Default<ListBlock> {
+        public ListBlockConverter() {
+            super(ListBlock.class, "list-block");
         }
 
-        protected abstract String doConvert(String markdownHtml);
-
+        @Override
+        public boolean convert(HtmlRenderer renderer, ListBlock node, StringBuilder buf) {
+            buf.append("<!-- wp:list {\"canvasClassName\":\"cnvs-block-core-list-" +
+                    timestamp() +
+                    "\"} -->\n" +
+                    "<ul>");
+            appendConvertedChildren(renderer, node, buf);
+            buf.append("</ul>\n" +
+                       "<!-- /wp:list -->");
+            return true;
+        }
     }
 
-    final List<Converter> converters = new ArrayList<>() {{
-        add(new AbstractConverter(Paragraph.class) {
-            @Override
-            protected String doConvert(String markdownHtml) {
-                return
-                        """
-                        <!-- wp:paragraph {"canvasClassName":"cnvs-block-core-paragraph-%s"} -->
-                        %s
-                        <!-- /wp:paragraph -->
-                        """.formatted(timestamp(), markdownHtml);
-            }
-        });
-        // h1
-        add(new AbstractConverter(Heading.class) {
-
-            @Override
-            public boolean supports(Node node) {
-                return super.supports(node) && ((Heading) node).getLevel() == 1;
-            }
-
-            @Override
-            protected String doConvert(String markdownHtml) {
-                return "";
-            }
-        });
-        // h2
-        add(new AbstractConverter(Heading.class) {
-
-            @Override
-            public boolean supports(Node node) {
-                return super.supports(node) && ((Heading) node).getLevel() == 2;
-            }
-
-            @Override
-            protected String doConvert(String markdownHtml) {
-                return
-                        """
-                        <!-- wp:heading {"canvasClassName":"cnvs-block-core-heading-%s"} -->
-                        %s
-                        <!-- /wp:heading -->
-                        """.formatted(timestamp(), markdownHtml)
-                        .replaceAll("<h2>", "<h2 class=\"wp-block-heading\">");
-            }
-        });
-    }};
-
-
-    private static @NotNull String timestamp() {
-        return String.valueOf(java.time.Instant.now().toEpochMilli());
+    public static void main(String[] args) {
+        SpringApplication.run(MarkdownToWordpress.class, args);
     }
+
 }
