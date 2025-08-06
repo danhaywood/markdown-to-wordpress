@@ -1,17 +1,18 @@
-package com.example.converter;
+package com.danhaywood.md2wp;
 
 import com.vladsch.flexmark.ast.FencedCodeBlock;
+import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
 class ConverterFencedCodeBlock extends Converter.Default<FencedCodeBlock> {
 
-    public ConverterFencedCodeBlock(String cssName) {
-        super(FencedCodeBlock.class, cssName);
+    public ConverterFencedCodeBlock(HtmlRenderer htmlRenderer, String cssName) {
+        super(FencedCodeBlock.class, htmlRenderer, cssName);
     }
 
     @Override
     public boolean supports(Node node) {
-        return super.supports(node) && cssName.equals(((FencedCodeBlock) node).getInfo().toString());
+        return super.supports(node) && cssName.equals((downcast(node)).getInfo().toString());
     }
 
     @Override

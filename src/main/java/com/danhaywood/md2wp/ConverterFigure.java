@@ -1,4 +1,4 @@
-package com.example.converter;
+package com.danhaywood.md2wp;
 
 import lombok.SneakyThrows;
 
@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 
 import com.vladsch.flexmark.ast.ImageRef;
 import com.vladsch.flexmark.ast.Paragraph;
@@ -19,21 +18,18 @@ import com.vladsch.flexmark.util.ast.Node;
 
 class ConverterFigure extends Converter.Default<Paragraph> {
 
-    private final ResourceLoader resourceLoader;
-
-    public ConverterFigure(ResourceLoader resourceLoader) {
-        super(Paragraph.class, null);
-        this.resourceLoader = resourceLoader;
+    public ConverterFigure(HtmlRenderer htmlRenderer) {
+        super(Paragraph.class, htmlRenderer, null);
     }
 
     @Override
     public boolean supports(Node node) {
-        return super.supports(node) && ((Paragraph)node).getFirstChild() instanceof ImageRef;
+        return super.supports(node) && (downcast(node)).getFirstChild() instanceof ImageRef;
     }
 
     @SneakyThrows
     @Override
-    public boolean convert(Resource resource, HtmlRenderer renderer, Paragraph node, StringBuilder buf) {
+    public boolean convert(Resource resource, Paragraph node, StringBuilder buf) {
         ImageRef imageRef = (ImageRef) node.getFirstChild();
         String reference = imageRef.getReference().toString();// Causeway welcome page
         Text text = (Text) imageRef.getNext();
@@ -65,7 +61,7 @@ class ConverterFigure extends Converter.Default<Paragraph> {
 
         }
 
-        return super.convert(resource, renderer, node, buf);
+        return super.convert(resource, node, buf);
     }
 
     @Override

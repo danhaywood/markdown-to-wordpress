@@ -1,7 +1,6 @@
 
-package com.example.converter;
+package com.danhaywood.md2wp;
 
-import com.vladsch.flexmark.ast.*;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
@@ -49,14 +48,19 @@ public class MarkdownToWordpress implements Runnable {
     @Autowired
     public MarkdownToWordpress(final ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
-        converters.add(new ConverterFigure(resourceLoader));  // must be before ConverterParagraph.
-        converters.add(new ConverterParagraph());
-        converters.add(new ConverterHeading1());
-        converters.add(new ConverterHeading2());
-        converters.add(new ListBlockConverter());
-        converters.add(new Converter.Default<>(ListItem.class, "list-item"));
-        converters.add(new ConverterFencedCodeBlock("bash"));
-        converters.add(new ConverterFencedCodeBlock("java"));
+
+        final var options = new MutableDataSet();
+        final var parser = Parser.builder(options).build();
+        final var htmlRenderer = HtmlRenderer.builder(options).build();
+
+        converters.add(new ConverterFigure(htmlRenderer));  // must be before ConverterParagraph.
+        converters.add(new ConverterParagraph(htmlRenderer));
+        converters.add(new ConverterHeading1(htmlRenderer));
+        converters.add(new ConverterHeading2(htmlRenderer));
+        converters.add(new ListBlockConverter(htmlRenderer, converters));
+        converters.add(new ConverterListItem(htmlRenderer));
+        converters.add(new ConverterFencedCodeBlock(htmlRenderer, "bash"));
+        converters.add(new ConverterFencedCodeBlock(htmlRenderer, "java"));
     }
 
     @SneakyThrows
@@ -82,33 +86,14 @@ public class MarkdownToWordpress implements Runnable {
         return buf.toString();
     }
 
-    private void appendConvertedChildren(Resource resource,  HtmlRenderer renderer, Node node, StringBuilder buf) {
+    private void appendConvertedChildren(Resource resource, HtmlRenderer renderer, Node node, StringBuilder buf) {
         node.getChildren()
                 .forEach(child -> {
                     converters.stream()
                             .filter(converter -> converter.supports(child))
-                            .filter(converter -> converter.convertNode(resource, renderer, child, buf))
+                            .filter(converter -> converter.convertNode(resource, child, buf))
                             .findFirst();
         });
-    }
-
-
-    private class ListBlockConverter extends Converter.Default<ListBlock> {
-        public ListBlockConverter() {
-            super(ListBlock.class, "list-block");
-        }
-
-        @Override
-        public boolean convert(Resource resource, HtmlRenderer renderer, ListBlock node, StringBuilder buf) {
-            buf.append("<!-- wp:list {\"canvasClassName\":\"cnvs-block-core-list-" +
-                    timestamp() +
-                    "\"} -->\n" +
-                    "<ul>");
-            appendConvertedChildren(resource, renderer, node, buf);
-            buf.append("</ul>\n" +
-                       "<!-- /wp:list -->");
-            return true;
-        }
     }
 
     public static void main(String[] args) {

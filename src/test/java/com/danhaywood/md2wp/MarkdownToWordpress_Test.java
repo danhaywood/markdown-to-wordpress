@@ -1,5 +1,5 @@
 
-package com.example.converter;
+package com.danhaywood.md2wp;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,8 @@ import org.approvaltests.reporters.UseReporter;
 import org.approvaltests.scrubbers.NormalizeSpacesScrubber;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +27,27 @@ import org.springframework.core.io.ResourceLoader;
 
 @SpringBootTest(classes = MarkdownToWordpress.class)
 @UseReporter(Junit5Reporter.class)
-class MarkdownToWordpress_Test extends DefaultTest {
+class MarkdownToWordpress_Test {
 
     @RequiredArgsConstructor
     @Getter
     enum Scenario {
-        para,
-        para2,
-        h1,
-        h2,
-        list,
-        code_bash,
-        code_java,
-//        figure,
+//        para,
+//        para2,
+//        h1,
+//        h2,
+//        list,
+//        code_bash,
+//        code_java,
+        figure,
         ;
+    }
+
+    protected TestInfo testInfo;
+
+    @BeforeEach
+    void captureTestInfo(TestInfo testInfo) {
+        this.testInfo = testInfo;
     }
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.example.converter;
+package com.danhaywood.md2wp;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,14 +11,17 @@ import com.vladsch.flexmark.util.ast.Node;
 interface Converter<T extends Node> {
     boolean supports(Node node);
 
-    default boolean convertNode(Resource resource, HtmlRenderer renderer, Node node, StringBuilder buf) {
-        return convert(resource, renderer, (T)node, buf);
+    default boolean convertNode(Resource resource, Node node, StringBuilder buf) {
+        return convert(resource, (T)node, buf);
     }
-    boolean convert(Resource resource, HtmlRenderer renderer, T node, StringBuilder buf);
+    boolean convert(Resource resource, T node, StringBuilder buf);
+
 
     @RequiredArgsConstructor
     class Default<T extends Node> implements Converter<T> {
+
         final Class<T> nodeClass;
+        final HtmlRenderer htmlRenderer;
         final String cssName;
 
         @Override
@@ -26,9 +29,16 @@ interface Converter<T extends Node> {
             return nodeClass.isAssignableFrom(node.getClass());
         }
 
+        protected T downcast(Node node) {
+            if (nodeClass.isAssignableFrom(node.getClass())) {
+                return nodeClass.cast(node);
+            }
+            throw new IllegalArgumentException("Node is not of type " + nodeClass.getName() + ": " + node);
+        }
+
         @Override
-        public boolean convert(Resource resource, HtmlRenderer renderer, T node, StringBuilder buf) {
-            String render = renderer.render(node);
+        public boolean convert(Resource resource, T node, StringBuilder buf) {
+            String render = htmlRenderer.render(node);
             final var markdownHtml = sanitize(render);
             final var convertedHtml = doConvert(markdownHtml);
             buf.append(convertedHtml);

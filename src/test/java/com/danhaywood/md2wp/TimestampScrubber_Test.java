@@ -1,4 +1,4 @@
-package com.example.converter;
+package com.danhaywood.md2wp;
 
 
 import org.assertj.core.api.Assertions;
