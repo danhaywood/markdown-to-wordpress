@@ -11,8 +11,8 @@ import com.vladsch.flexmark.util.ast.Node;
 public interface Converter<T extends Node> {
     boolean supports(Node node);
 
-    default boolean convertNode(Resource resource, Node node, StringBuilder buf) {
-        return convert(resource, (T)node, buf);
+    default void convertNode(Resource resource, Node node, StringBuilder buf) {
+        convert(resource, (T)node, buf);
     }
-    boolean convert(Resource resource, T node, StringBuilder buf);
+    void convert(Resource resource, T node, StringBuilder buf);
 }

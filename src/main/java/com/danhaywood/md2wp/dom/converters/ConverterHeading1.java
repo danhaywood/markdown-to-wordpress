@@ -3,14 +3,13 @@ package com.danhaywood.md2wp.dom.converters;
 import org.springframework.stereotype.Component;
 
 import com.vladsch.flexmark.ast.Heading;
-import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
 @Component
 class ConverterHeading1 extends ConverterAbstract<Heading> {
 
     public ConverterHeading1(Context context) {
-        super(Heading.class, context, "heading");
+        super(context, Heading.class, "heading");
     }
 
     @Override

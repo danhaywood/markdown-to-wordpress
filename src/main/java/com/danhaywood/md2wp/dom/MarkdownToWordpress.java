@@ -55,9 +55,9 @@ public class MarkdownToWordpress  {
                 .forEach(child -> {
                     converters.stream()
                             .filter(converter -> converter.supports(child))
-                            .filter(converter -> converter.convertNode(resource, child, buf))
-                            .findFirst();
-        });
+                            .findFirst()
+                            .ifPresent(converter -> converter.convertNode(resource, child, buf));
+                });
     }
 
     public static void main(String[] args) {

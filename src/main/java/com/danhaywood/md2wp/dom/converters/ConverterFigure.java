@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import com.vladsch.flexmark.ast.ImageRef;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.Text;
-import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
 @Component
@@ -23,7 +22,7 @@ import com.vladsch.flexmark.util.ast.Node;
 class ConverterFigure extends ConverterAbstract<Paragraph> {
 
     public ConverterFigure(Context context) {
-        super(Paragraph.class, context, null);
+        super(context, Paragraph.class, null);
     }
 
     @Override
@@ -33,27 +32,27 @@ class ConverterFigure extends ConverterAbstract<Paragraph> {
 
     @SneakyThrows
     @Override
-    public boolean convert(Resource resource, Paragraph node, StringBuilder buf) {
-        ImageRef imageRef = (ImageRef) node.getFirstChild();
-        String reference = imageRef.getReference().toString();// Causeway welcome page
-        Text text = (Text) imageRef.getNext();
-        String link = text.getChars().toString();   // (images/causeway-welcome-page.png =400x)
-        Pattern pattern = Pattern.compile("^\\(([^\\s]+.png)\\s*=([^)]+)\\)$");
-        Matcher matcher = pattern.matcher(link);
+    public void convert(Resource resource, Paragraph node, StringBuilder buf) {
+        final var imageRef = (ImageRef) node.getFirstChild();
+        final var reference = imageRef.getReference().toString();// Causeway welcome page
+        final var text = (Text) imageRef.getNext();
+        final var link = text.getChars().toString();   // (images/causeway-welcome-page.png =400x)
+        final var pattern = Pattern.compile("^\\(([^\\s]+.png)\\s*=([^)]+)\\)$");
+        final var matcher = pattern.matcher(link);
         if (matcher.matches()) {
-            String imagePath = matcher.group(1); // images/causeway-welcome-page   (.png is stripped)
-            String size = matcher.group(2);      // 400x
+            final var imagePath = matcher.group(1); // images/causeway-welcome-page   (.png is stripped)
+            final var size = matcher.group(2);      // 400x
 
             final var imageResource = resource.createRelative(imagePath);
 
-            BufferedImage bufferedImage = ImageIO.read(imageResource.getInputStream());
+            final var bufferedImage = ImageIO.read(imageResource.getInputStream());
 
-            int width = bufferedImage.getWidth();
-            int height = bufferedImage.getHeight();
+            final var width = bufferedImage.getWidth();
+            final var height = bufferedImage.getHeight();
 
             // <figure class="wp-block-image size-large is-resized"><img src="https://javapro.io/wp-content/uploads/2025/08/causeway-welcome-page-1024x564.png" alt="" class="wp-image-5814" style="width:400px" /></figure>
-            String base = "https://javapro.io/wp-content/uploads/";
-            String currMonth = "2025/08";
+            final var base = "https://javapro.io/wp-content/uploads/";
+            final var currMonth = "2025/08";
 
             // TODO: scale 1488 --> 1024
             //       scale  820 -->  564
@@ -62,10 +61,9 @@ class ConverterFigure extends ConverterAbstract<Paragraph> {
 
             System.out.println(fileName);
 
-
         }
 
-        return super.convert(resource, node, buf);
+        super.convert(resource, node, buf);
     }
 
     @Override

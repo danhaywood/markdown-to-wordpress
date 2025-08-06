@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.vladsch.flexmark.ast.ListBlock;
-import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
 @Component
@@ -18,26 +17,25 @@ class ConverterListBlock extends ConverterAbstract<ListBlock> {
     private List<Converter<?>> converters;
 
     public ConverterListBlock(Context context) {
-        super(ListBlock.class, context, "list-block");
+        super(context, ListBlock.class, "list-block");
     }
 
     @Override
-    public boolean convert(Resource resource, ListBlock node, StringBuilder buf) {
+    public void convert(Resource resource, ListBlock node, StringBuilder buf) {
         buf.append(("<!-- wp:list {\"canvasClassName\":\"cnvs-block-core-list-%s\"} -->" +
                     "\n<ul>").formatted(timestamp()));
         appendConvertedChildren(resource, node, buf);
         buf.append("</ul>" +
                 "\n<!-- /wp:list -->");
-        return true;
     }
 
     private void appendConvertedChildren(Resource resource, Node node, StringBuilder buf) {
         node.getChildren()
                 .forEach(child -> {
-                    Optional<Converter<?>> first = converters.stream()
+                    converters.stream()
                             .filter(converter -> converter.supports(child))
-                            .filter(converter -> converter.convertNode(resource, child, buf))
-                            .findFirst();
+                            .findFirst()
+                            .ifPresent(converter -> converter.convertNode(resource, child, buf));
                 });
     }
 }

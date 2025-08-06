@@ -20,8 +20,8 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
         final Timestamper timestamper;
     }
 
-    final Class<T> nodeClass;
     final Context context;
+    final Class<T> nodeClass;
     final String cssName;
 
     @Override
@@ -37,12 +37,11 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
     }
 
     @Override
-    public boolean convert(Resource resource, T node, StringBuilder buf) {
+    public void convert(Resource resource, T node, StringBuilder buf) {
         String render = context.htmlRenderer.render(node);
         final var markdownHtml = sanitize(render);
         final var convertedHtml = doConvert(markdownHtml);
         buf.append(convertedHtml);
-        return true;
     }
 
     private static @NotNull String sanitize(String render) {
