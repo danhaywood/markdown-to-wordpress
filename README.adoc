@@ -1,0 +1,34 @@
+= markdown-to-wordpress
+
+
+* to build
++
+[source,bash]
+----
+mvn clean package
+----
+
+* to run tests
++
+[source,bash]
+----
+mvn clean verify
+----
+
+* to run E2e tests
++
+add `application-private.yml` in `src/test/resources` (see template)
+
+* to run:
+
+** `config/application.yml`
+
+** Upload the media to WordPress.
+
+** then:
++
+[source,bash]
+----
+./md2wp.sh -i  article.md -o article.html
+----
+

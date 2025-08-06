@@ -1,3 +1,6 @@
 .idea/
 target/
 .approval_tests_temp/
+article.md
+article.html
+article.md.html

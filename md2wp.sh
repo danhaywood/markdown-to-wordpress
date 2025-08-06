@@ -1,2 +1,4 @@
-#!/bin/bash
-java -cp target/markdown-to-wordpress-1.0-SNAPSHOT-jar-with-dependencies.jar com.example.converter.MarkdownToWordpress "$@"
+#!/usr/bin/env bash
+set -euo pipefail
+JAR="$(cd "$(dirname "$0")" && pwd)/target/md2wp.jar"
+exec java ${JAVA_OPTS:-} -jar "$JAR" "$@"

@@ -1,6 +1,7 @@
 package com.danhaywood.md2wp.dom.converters;
 
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -20,10 +22,16 @@ import com.vladsch.flexmark.util.ast.Node;
 
 @Component
 @Order(100)   // must come before ConverterParagraph
+@Log4j2
 class ConverterFigure extends ConverterAbstract<Paragraph> {
 
+    @Override
+    public Logger getLog() {
+        return log;
+    }
+
     public ConverterFigure(Context context) {
-        super(context, Paragraph.class, null);
+        super(context, Paragraph.class, null, null);
     }
 
     @Override
@@ -43,6 +51,7 @@ class ConverterFigure extends ConverterAbstract<Paragraph> {
         final var matcher = pattern.matcher(link);
 
         if (matcher.matches()) {
+            getLog().info("<figure class=\"wp-block-image size-full is-resized\">");
             final var imagePath = matcher.group(1); // causeway-welcome-page
             final var scaleToWidth = matcher.group(2);      // 400x
 
@@ -53,6 +62,8 @@ class ConverterFigure extends ConverterAbstract<Paragraph> {
                     <figure class="wp-block-image size-full is-resized"><img src="%s" alt="%s" class="wp-image-%d" style="width:%spx" /></figure>
                     """.formatted(item.getSourceUrlFull(), altDesc, item.getId(), scaleToWidth)
             ));
+        } else {
+            getLog().warn("Could not find image " + imageRef);
         }
     }
 }

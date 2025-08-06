@@ -1,7 +1,9 @@
 package com.danhaywood.md2wp.dom.converters;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,9 @@ import com.vladsch.flexmark.util.ast.Node;
 @RequiredArgsConstructor
 public abstract class ConverterAbstract<T extends Node> implements Converter<T> {
 
+
+    public abstract Logger getLog();
+
     @Component
     @RequiredArgsConstructor
     static class Context {
@@ -29,6 +34,7 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
     final Context context;
     final Class<T> nodeClass;
     final String cssName;
+    final String level;
 
     @Override
     public boolean supports(Node node) {
@@ -55,12 +61,13 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
     }
 
     protected String doConvert(String markdownHtml) {
+        getLog().info(" <!-- wp:%s -->".formatted(cssName));
         return
                 """
-                <!-- wp:%s {"canvasClassName":"cnvs-block-core-%s-%s"} -->
+                <!-- wp:%s {%s"canvasClassName":"cnvs-block-core-%s-%s"} -->
                 %s
                 <!-- /wp:%s -->
-                """.formatted(cssName, cssName, timestamp(), markdownHtml, cssName);
+                """.formatted(cssName, (level != null ? level : ""), cssName, timestamp(), markdownHtml, cssName);
     }
 
     protected @NotNull String timestamp() {
