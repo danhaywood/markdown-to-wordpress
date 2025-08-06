@@ -52,13 +52,13 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
     protected String doConvert(String markdownHtml) {
         return
                 """
-                        <!-- wp:%s {"canvasClassName":"cnvs-block-core-%s-%s"} -->
-                        %s
-                        <!-- /wp:%s -->
-                        """.formatted(cssName, cssName, timestamp(), markdownHtml, cssName);
+                <!-- wp:%s {"canvasClassName":"cnvs-block-core-%s-%s"} -->
+                %s
+                <!-- /wp:%s -->
+                """.formatted(cssName, cssName, timestamp(), markdownHtml, cssName);
     }
 
-    protected static @NotNull String timestamp() {
-        return String.valueOf(java.time.Instant.now().toEpochMilli());
+    protected @NotNull String timestamp() {
+        return context.timestamper.timestamp();
     }
 }
