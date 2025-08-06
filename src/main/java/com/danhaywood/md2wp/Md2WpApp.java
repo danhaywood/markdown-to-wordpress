@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -26,6 +27,7 @@ import com.danhaywood.md2wp.dom.*;
         description = "Converts Markdown to WordPress-compatible HTML blocks"
 )
 @SpringBootApplication
+@EnableConfigurationProperties({Module.class})
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class Md2WpApp implements Runnable {
 

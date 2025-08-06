@@ -11,27 +11,21 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.danhaywood.md2wp.dom.MarkdownToWordpress;
 
 @SpringBootTest(classes = Module.class)
 @UseReporter(Junit5Reporter.class)
-class MarkdownToWordpress_Test extends MarkdownToWordpress_Abstract {
-
+@ActiveProfiles("private")
+class MarkdownToWordpress_E2eTest extends MarkdownToWordpress_Abstract {
 
     @RequiredArgsConstructor
     @Getter
     enum Scenario {
-        para,
-        para2,
-        h1,
-        h2,
-        list,
-        code_bash,
-        code_java,
+        figure,
         ;
     }
-
 
     @Getter @Autowired ResourceLoader resourceLoader;
     @Getter @Autowired MarkdownToWordpress converter;

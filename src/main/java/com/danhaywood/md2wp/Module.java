@@ -1,5 +1,6 @@
 package com.danhaywood.md2wp;
 
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 
 @Configuration
 @ComponentScan
+@ConfigurationPropertiesScan
 public class Module {
 
     @Bean
