@@ -1,6 +1,7 @@
 
-package com.danhaywood.md2wp.services;
+package com.danhaywood.md2wp.dom;
 
+import com.danhaywood.md2wp.dom.converters.Converter;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;

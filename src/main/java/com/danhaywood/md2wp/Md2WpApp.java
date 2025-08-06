@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.danhaywood.md2wp.services.*;
+import com.danhaywood.md2wp.dom.*;
 
 
 @Import({Module.class})

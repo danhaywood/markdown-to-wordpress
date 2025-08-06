@@ -1,13 +1,14 @@
-package com.danhaywood.md2wp.services;
+package com.danhaywood.md2wp.dom.converters;
 
+import com.danhaywood.md2wp.ts.Timestamper;
 import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
-abstract class ConverterFencedCodeBlockAbstract extends Converter.Default<FencedCodeBlock> {
+abstract class ConverterFencedCodeBlockAbstract extends ConverterAbstract<FencedCodeBlock> {
 
-    protected ConverterFencedCodeBlockAbstract(HtmlRenderer htmlRenderer, String cssName) {
-        super(FencedCodeBlock.class, htmlRenderer, cssName);
+    protected ConverterFencedCodeBlockAbstract(Context context, String cssName) {
+        super(FencedCodeBlock.class, context, cssName);
     }
 
     @Override

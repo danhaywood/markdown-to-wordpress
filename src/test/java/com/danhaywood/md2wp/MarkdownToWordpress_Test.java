@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.danhaywood.md2wp.services.MarkdownToWordpress;
+import com.danhaywood.md2wp.dom.MarkdownToWordpress;
 
 @SpringBootTest(classes = Module.class)
 @UseReporter(Junit5Reporter.class)

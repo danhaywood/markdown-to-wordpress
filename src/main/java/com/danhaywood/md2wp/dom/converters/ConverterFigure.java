@@ -1,4 +1,4 @@
-package com.danhaywood.md2wp.services;
+package com.danhaywood.md2wp.dom.converters;
 
 import lombok.SneakyThrows;
 
@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -21,10 +20,10 @@ import com.vladsch.flexmark.util.ast.Node;
 
 @Component
 @Order(100)   // must come before ConverterParagraph
-class ConverterFigure extends Converter.Default<Paragraph> {
+class ConverterFigure extends ConverterAbstract<Paragraph> {
 
-    public ConverterFigure(HtmlRenderer htmlRenderer) {
-        super(Paragraph.class, htmlRenderer, null);
+    public ConverterFigure(Context context) {
+        super(Paragraph.class, context, null);
     }
 
     @Override

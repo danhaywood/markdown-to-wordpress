@@ -50,7 +50,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>com.danhaywood.md2wp.services.MarkdownToWordpress</mainClass>
+          <mainClass>com.danhaywood.md2wp.dom.MarkdownToWordpress</mainClass>
         </configuration>
       </plugin>
     </plugins>

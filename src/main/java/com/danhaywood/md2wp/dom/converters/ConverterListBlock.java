@@ -1,4 +1,4 @@
-package com.danhaywood.md2wp.services;
+package com.danhaywood.md2wp.dom.converters;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,13 +12,13 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
 @Component
-class ConverterListBlock extends Converter.Default<ListBlock> {
+class ConverterListBlock extends ConverterAbstract<ListBlock> {
 
     @Autowired
     private List<Converter<?>> converters;
 
-    public ConverterListBlock(HtmlRenderer htmlRenderer) {
-        super(ListBlock.class, htmlRenderer, "list-block");
+    public ConverterListBlock(Context context) {
+        super(ListBlock.class, context, "list-block");
     }
 
     @Override

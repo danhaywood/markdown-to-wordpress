@@ -1,4 +1,4 @@
-package com.danhaywood.md2wp.services;
+package com.danhaywood.md2wp.dom.converters;
 
 import org.springframework.stereotype.Component;
 
@@ -7,9 +7,9 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
 @Component
-class ConverterHeading2 extends Converter.Default<Heading> {
-    public ConverterHeading2(HtmlRenderer htmlRenderer) {
-        super(Heading.class, htmlRenderer, "heading");
+class ConverterHeading2 extends ConverterAbstract<Heading> {
+    public ConverterHeading2(Context context) {
+        super(Heading.class, context, "heading");
     }
 
     @Override
