@@ -1,4 +1,4 @@
-package com.danhaywood.md2wp;
+package com.danhaywood.md2wp.services;
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,7 +8,7 @@ import org.springframework.core.io.Resource;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
-interface Converter<T extends Node> {
+public interface Converter<T extends Node> {
     boolean supports(Node node);
 
     default boolean convertNode(Resource resource, Node node, StringBuilder buf) {

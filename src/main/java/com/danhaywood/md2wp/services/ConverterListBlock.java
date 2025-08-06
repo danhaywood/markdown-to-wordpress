@@ -1,20 +1,24 @@
-package com.danhaywood.md2wp;
+package com.danhaywood.md2wp.services;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import com.vladsch.flexmark.ast.ListBlock;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
-class ListBlockConverter extends Converter.Default<ListBlock> {
-    private final List<Converter<?>> converters;
+@Component
+class ConverterListBlock extends Converter.Default<ListBlock> {
 
-    public ListBlockConverter(HtmlRenderer htmlRenderer, List<Converter<?>> converters) {
+    @Autowired
+    private List<Converter<?>> converters;
+
+    public ConverterListBlock(HtmlRenderer htmlRenderer) {
         super(ListBlock.class, htmlRenderer, "list-block");
-        this.converters = converters;
     }
 
     @Override

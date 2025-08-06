@@ -25,21 +25,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-@SpringBootTest(classes = MarkdownToWordpress.class)
+import com.danhaywood.md2wp.services.MarkdownToWordpress;
+
+@SpringBootTest(classes = Module.class)
 @UseReporter(Junit5Reporter.class)
 class MarkdownToWordpress_Test {
 
     @RequiredArgsConstructor
     @Getter
     enum Scenario {
-//        para,
-//        para2,
-//        h1,
-//        h2,
-//        list,
-//        code_bash,
-//        code_java,
-        figure,
+        para,
+        para2,
+        h1,
+        h2,
+        list,
+        code_bash,
+        code_java,
+//        figure,
         ;
     }
 

@@ -1,12 +1,12 @@
-package com.danhaywood.md2wp;
+package com.danhaywood.md2wp.services;
 
 import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;
 
-class ConverterFencedCodeBlock extends Converter.Default<FencedCodeBlock> {
+abstract class ConverterFencedCodeBlockAbstract extends Converter.Default<FencedCodeBlock> {
 
-    public ConverterFencedCodeBlock(HtmlRenderer htmlRenderer, String cssName) {
+    protected ConverterFencedCodeBlockAbstract(HtmlRenderer htmlRenderer, String cssName) {
         super(FencedCodeBlock.class, htmlRenderer, cssName);
     }
 
