@@ -7,7 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.danhaywood.md2wp.cal.Calendar;
-import com.danhaywood.md2wp.config.Config;
+import com.danhaywood.md2wp.config.Md2WpConfig;
 import com.danhaywood.md2wp.ts.Timestamper;
 import com.danhaywood.md2wp.wp.WordpressMediaService;
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -19,7 +19,7 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
     @Component
     @RequiredArgsConstructor
     static class Context {
-        final Config config;
+        final Md2WpConfig config;
         final HtmlRenderer htmlRenderer;
         final Timestamper timestamper;
         final Calendar calendar;

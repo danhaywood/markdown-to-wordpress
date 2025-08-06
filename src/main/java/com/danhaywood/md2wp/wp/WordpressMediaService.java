@@ -10,15 +10,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import com.danhaywood.md2wp.config.Config;
+import com.danhaywood.md2wp.config.Md2WpConfig;
 
 @Service
 public class WordpressMediaService {
 
     private final RestClient restClient;
-    private final Config config;
+    private final Md2WpConfig config;
 
-    public WordpressMediaService(RestClient.Builder builder, Config config) {
+    public WordpressMediaService(RestClient.Builder builder, Md2WpConfig config) {
         this.restClient = builder.build();
         this.config = config;
     }

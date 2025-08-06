@@ -1,21 +1,25 @@
 package com.danhaywood.md2wp.wp;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.core.io.ResourceLoader;
 
-import com.danhaywood.md2wp.Module;
+import com.danhaywood.md2wp.E2eTest;
+import com.danhaywood.md2wp.Md2WpModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SpringBootTest(classes = Module.class)
-@ActiveProfiles("private")
-class WordpressMediaService_E2eTest {
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
+@SpringBootTest(classes = Md2WpModule.class)
+class WordpressMediaService_E2eTest implements E2eTest {
 
     @Autowired private WordpressMediaService wordpressMediaService;
     @Autowired private ObjectMapper objectMapper;
+    @Autowired @Getter private ResourceLoader resourceLoader;
 
     @SneakyThrows
     @Test

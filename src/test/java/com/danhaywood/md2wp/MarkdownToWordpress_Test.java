@@ -14,7 +14,7 @@ import org.springframework.core.io.ResourceLoader;
 
 import com.danhaywood.md2wp.dom.MarkdownToWordpress;
 
-@SpringBootTest(classes = Module.class)
+@SpringBootTest(classes = Md2WpModule.class)
 @UseReporter(Junit5Reporter.class)
 class MarkdownToWordpress_Test extends MarkdownToWordpress_Abstract {
 

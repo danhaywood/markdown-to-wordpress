@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties("md2wp")
 @Data
-public class Config {
+public class Md2WpConfig {
 
     private Wordpress wordpress = new Wordpress();
 

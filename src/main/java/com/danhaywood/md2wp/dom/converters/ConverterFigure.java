@@ -36,20 +36,22 @@ class ConverterFigure extends ConverterAbstract<Paragraph> {
     public void convert(Resource resource, Paragraph node, StringBuilder buf) {
 
         final var imageRef = (ImageRef) node.getFirstChild();
+        final var altDesc = imageRef.getReference().toString();
         final var text = (Text) imageRef.getNext();
         final var link = text.getChars().toString();   // (images/causeway-welcome-page.png =400x)
-        final var pattern = Pattern.compile("^\\(([^\\s]+.png)\\s*=([^)]+)\\)$");
+        final var pattern = Pattern.compile("^\\(images/([^\\s]+.png)\\s*=([^)]+)x\\)$");
         final var matcher = pattern.matcher(link);
 
         if (matcher.matches()) {
-            final var imagePath = matcher.group(1); // images/causeway-welcome-page   (.png is stripped)
+            final var imagePath = matcher.group(1); // causeway-welcome-page
             final var scaleToWidth = matcher.group(2);      // 400x
 
-            context.wordpressMediaService.search(imagePath)
+            Optional<MediaItem> mediaItemIfAny = context.wordpressMediaService.search(imagePath);
+            mediaItemIfAny
                     .ifPresent(item -> buf.append(
                     """
                     <figure class="wp-block-image size-full is-resized"><img src="%s" alt="%s" class="wp-image-%d" style="width:%spx" /></figure>
-                    """.formatted(item.getSourceUrlFull(), imagePath, item.getId(), scaleToWidth)
+                    """.formatted(item.getSourceUrlFull(), altDesc, item.getId(), scaleToWidth)
             ));
         }
     }

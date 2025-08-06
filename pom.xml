@@ -32,6 +32,7 @@
   </properties>
 
   <build>
+    <finalName>md2wp</finalName>
     <testResources>
       <testResource>
         <directory>src/test/java</directory>
@@ -50,7 +51,8 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>com.danhaywood.md2wp.dom.MarkdownToWordpress</mainClass>
+          <executable>true</executable>
+          <mainClass>com.danhaywood.md2wp.Md2WpApp</mainClass>
         </configuration>
       </plugin>
     </plugins>
@@ -181,6 +183,27 @@
     </dependency>
 
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+      <properties>
+        <spring.aot.enabled>true</spring.aot.enabled>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <version>0.10.6</version>
+            <configuration>
+              <imageName>md2wp</imageName>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 
 </project>
