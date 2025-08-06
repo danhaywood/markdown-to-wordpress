@@ -46,11 +46,11 @@ public class MarkdownToWordpress  {
         final var buf = new StringBuilder();
         final var node = parser.parse(markdown);
 
-        appendConvertedChildren(resource, htmlRenderer, node, buf);
+        appendConvertedChildren(resource, node, buf);
         return buf.toString();
     }
 
-    private void appendConvertedChildren(Resource resource, HtmlRenderer renderer, Node node, StringBuilder buf) {
+    private void appendConvertedChildren(Resource resource, Node node, StringBuilder buf) {
         node.getChildren()
                 .forEach(child -> {
                     converters.stream()

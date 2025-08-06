@@ -22,14 +22,15 @@ class MarkdownToWordpress_Test extends MarkdownToWordpress_Abstract {
     @RequiredArgsConstructor
     @Getter
     enum Scenario {
-//        para,
-//        para2,
-//        h1,
-//        h2,
+        para,
+        para2,
+        h1,
+        h2,
         h3,
-//        list,
-//        code_bash,
-//        code_java,
+        list,
+        code_bash,
+        code_java,
+        separator,
         ;
     }
 
