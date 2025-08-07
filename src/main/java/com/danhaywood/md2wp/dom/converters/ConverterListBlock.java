@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.vladsch.flexmark.ast.ListBlock;
+import com.vladsch.flexmark.ast.OrderedList;
 import com.vladsch.flexmark.util.ast.Node;
 
 @Component
@@ -32,8 +33,9 @@ class ConverterListBlock extends ConverterAbstract<ListBlock> {
     @Override
     public void convert(Resource resource, ListBlock node, StringBuilder buf) {
         getLog().info("<!-- wp:list -->");
-        buf.append(("<!-- wp:list {\"canvasClassName\":\"cnvs-block-core-list-%s\"} -->" +
-                    "\n<ul>").formatted(timestamp()));
+        String ordered = "" + ((node instanceof OrderedList) ? "\"ordered\":true," : "");
+        buf.append(("<!-- wp:list {%s\"canvasClassName\":\"cnvs-block-core-list-%s\"} -->" +
+                    "\n<ul>").formatted(ordered, timestamp()));
         appendConvertedChildren(resource, node, buf);
         buf.append("</ul>" +
                 "\n<!-- /wp:list -->");
