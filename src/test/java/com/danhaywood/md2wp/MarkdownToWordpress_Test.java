@@ -24,6 +24,7 @@ class MarkdownToWordpress_Test extends MarkdownToWordpress_Abstract {
     enum Scenario {
         para,
         para2,
+        para_with_link,
         h1,
         h2,
         h3,

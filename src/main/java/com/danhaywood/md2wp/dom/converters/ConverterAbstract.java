@@ -1,19 +1,19 @@
 package com.danhaywood.md2wp.dom.converters;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import com.danhaywood.md2wp.cal.Calendar;
-import com.danhaywood.md2wp.config.Md2WpConfig;
 import com.danhaywood.md2wp.ts.Timestamper;
 import com.danhaywood.md2wp.wp.WordpressMediaService;
 import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 
 @RequiredArgsConstructor
 public abstract class ConverterAbstract<T extends Node> implements Converter<T> {
@@ -24,10 +24,10 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
     @Component
     @RequiredArgsConstructor
     static class Context {
-        final Md2WpConfig config;
+        final MutableDataSet options;
+        final Parser parser;
         final HtmlRenderer htmlRenderer;
         final Timestamper timestamper;
-        final Calendar calendar;
         final WordpressMediaService wordpressMediaService;
     }
 
@@ -50,14 +50,17 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
 
     @Override
     public void convert(Resource resource, T node, StringBuilder buf) {
-        String render = context.htmlRenderer.render(node);
+        final var document = new Document(context.options, node.getChars());
+        document.appendChild(node);
+        final var render = context.htmlRenderer.render(document);
         final var markdownHtml = sanitize(render);
         final var convertedHtml = doConvert(markdownHtml);
         buf.append(convertedHtml);
     }
 
     private static @NotNull String sanitize(String render) {
-        return render.trim();
+        return render.trim()
+                .replaceAll("<a href=", "<a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=");
     }
 
     protected String doConvert(String markdownHtml) {

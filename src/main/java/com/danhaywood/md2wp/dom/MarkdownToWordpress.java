@@ -25,23 +25,25 @@ public class MarkdownToWordpress  {
 
     final ResourceLoader resourceLoader;
     final HtmlRenderer htmlRenderer;
+    final Parser parser;
 
-    final List<Converter<?>> converters = new ArrayList<>();
+    final List<Converter<?>> converters;
 
     @Autowired
-    public MarkdownToWordpress(final ResourceLoader resourceLoader, final HtmlRenderer htmlRenderer, List<Converter<?>> converters) {
+    public MarkdownToWordpress(
+            final ResourceLoader resourceLoader,
+            final HtmlRenderer htmlRenderer,
+            final Parser parser,
+            final List<Converter<?>> converters) {
         this.resourceLoader = resourceLoader;
         this.htmlRenderer = htmlRenderer;
-        converters.forEach(this.converters::add);
+        this.parser = parser;
+        this.converters = converters;
     }
 
     @NonNull
     public String convert(Resource resource) throws IOException {
         String markdown = resource.getContentAsString(StandardCharsets.UTF_8);
-
-        final var options = new MutableDataSet();
-        final var parser = Parser.builder(options).build();
-        final var htmlRenderer = HtmlRenderer.builder(options).build();
 
         final var buf = new StringBuilder();
         final var node = parser.parse(markdown);
