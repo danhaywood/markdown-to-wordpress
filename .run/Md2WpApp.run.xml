@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Md2WpApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="markdown-to-wordpress" />
+    <option name="PROGRAM_PARAMETERS" value="-i article.md -o article.html" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.danhaywood.md2wp.Md2WpApp" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
