@@ -32,6 +32,7 @@ class MarkdownToWordpress_Test extends MarkdownToWordpress_Abstract {
         numlist,
         code_bash,
         code_java,
+        code_xml,
         separator,
         tip,
         note,
