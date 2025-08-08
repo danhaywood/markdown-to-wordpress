@@ -60,7 +60,7 @@ public abstract class ConverterAbstract<T extends Node> implements Converter<T> 
 
     private static @NotNull String sanitize(String render) {
         return render.trim()
-                .replaceAll("<a href=", "<a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=");
+                .replaceAll("<a href=", "<a target=\"_blank\" href=");
     }
 
     protected String doConvert(String markdownHtml) {
