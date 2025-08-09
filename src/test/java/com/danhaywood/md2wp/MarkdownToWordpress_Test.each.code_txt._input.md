@@ -1,0 +1,11 @@
+```txt
+#name
+telephoneNumber
+emailAddress
+daysSinceLastVisit
+#lastVisit
+#knownAs
+#attachment
+#notes
+#version
+```

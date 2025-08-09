@@ -2,6 +2,8 @@ package com.danhaywood.md2wp.dom.converters;
 
 import lombok.extern.log4j.Log4j2;
 
+import java.util.Objects;
+
 import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.util.ast.Node;
 
@@ -24,9 +26,9 @@ abstract class ConverterFencedCodeBlockAbstract extends ConverterAbstract<Fenced
 
     @Override
     protected String doConvert(String markdownHtml) {
-        getLog().info("<!-- wp:syntaxhighlighter/code {\"language\":\"%s\"}".formatted(language()));
+        getLog().info("<!-- wp:syntaxhighlighter/code");
         return """
-                <!-- wp:syntaxhighlighter/code {"language":"%s"} -->
+                <!-- wp:syntaxhighlighter/code %s-->
                 %s
                 <!-- /wp:syntaxhighlighter/code -->
                 """.formatted(language(), markdownHtml)
@@ -36,6 +38,9 @@ abstract class ConverterFencedCodeBlockAbstract extends ConverterAbstract<Fenced
     }
 
     private String language() {
-        return cssAlternative != null ? cssAlternative : cssName;
+        if(Objects.equals(cssAlternative, "")) {
+            return "";
+        }
+        return "{\"language\":\"%s\"} ".formatted(cssAlternative != null ? cssAlternative : cssName);
     }
 }
