@@ -8,8 +8,13 @@ import com.vladsch.flexmark.util.ast.Node;
 @Log4j2
 abstract class ConverterFencedCodeBlockAbstract extends ConverterAbstract<FencedCodeBlock> {
 
+    private final String cssAlternative;
     protected ConverterFencedCodeBlockAbstract(Context context, String cssName) {
+        this(context, cssName, null);
+    }
+    protected ConverterFencedCodeBlockAbstract(Context context, String cssName, String cssAlternative) {
         super(context, FencedCodeBlock.class, cssName, null);
+        this.cssAlternative = cssAlternative;
     }
 
     @Override
@@ -19,14 +24,18 @@ abstract class ConverterFencedCodeBlockAbstract extends ConverterAbstract<Fenced
 
     @Override
     protected String doConvert(String markdownHtml) {
-        getLog().info("<!-- wp:syntaxhighlighter/code {\"language\":\"%s\"}".formatted(cssName));
+        getLog().info("<!-- wp:syntaxhighlighter/code {\"language\":\"%s\"}".formatted(language()));
         return """
                 <!-- wp:syntaxhighlighter/code {"language":"%s"} -->
                 %s
                 <!-- /wp:syntaxhighlighter/code -->
-                """.formatted(cssName, markdownHtml)
+                """.formatted(language(), markdownHtml)
                 .replaceAll("<pre><code class=\"language-" + cssName + "\">", "<pre class=\"wp-block-syntaxhighlighter-code\">")
                 .replaceAll("</code></pre>", "</pre>")
                 ;
+    }
+
+    private String language() {
+        return cssAlternative != null ? cssAlternative : cssName;
     }
 }
